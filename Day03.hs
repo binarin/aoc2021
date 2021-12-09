@@ -27,8 +27,8 @@ parse = fmap (fmap decodeBin)
 readBinary :: String -> Int
 readBinary = foldl (\acc digit -> acc * 2 + (ord digit - ord '0')) 0
 
-main :: IO ()
-main = do
+day03 :: IO ()
+day03 = do
   -- report <- pure sample
   report <- lines <$>  readFile "data/day03.txt"
   let parsed = parse report
