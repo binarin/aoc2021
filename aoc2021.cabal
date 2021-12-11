@@ -11,6 +11,7 @@ executable aoc2021
   main-is:             Main.hs
   other-modules:       Prelude
                      , Vector2D
+                     , Day01
                      , Day03
                      , Day04
                      -- , Day05
