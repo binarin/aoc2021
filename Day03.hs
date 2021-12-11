@@ -1,6 +1,8 @@
 {-# LANGUAGE LambdaCase #-}
 module Day03 where
 
+import BasePrelude as B
+
 import Data.Char (ord)
 
 sample :: [String]
@@ -18,8 +20,8 @@ sample = ["00100"
          ,"01010"
          ]
 
-parse :: [String] -> [[Int]]
-parse = fmap (fmap decodeBin)
+parseInput :: [String] -> [[Int]]
+parseInput = fmap (fmap decodeBin)
   where
     decodeBin '0' = 0
     decodeBin '1' = 1
@@ -30,8 +32,8 @@ readBinary = foldl (\acc digit -> acc * 2 + (ord digit - ord '0')) 0
 day03 :: IO ()
 day03 = do
   -- report <- pure sample
-  report <- lines <$>  readFile "data/day03.txt"
-  let parsed = parse report
+  report <- lines <$>  B.readFile "data/day03.txt"
+  let parsed = parseInput report
       freq = foldr (zipWith (+)) (head parsed) (tail parsed)
       threshold = length parsed `div` 2
       gamma = flip map freq $ \case

@@ -1,4 +1,4 @@
-cabal-version:       >=1.10
+cabal-version:       2.0
 
 name:                aoc2021
 version:             0.1.0.0
@@ -9,8 +9,10 @@ build-type:          Simple
 
 executable aoc2021
   main-is:             Main.hs
-  other-modules:       Day03
-                     -- , Day04
+  other-modules:       Prelude
+                     , Vector2D
+                     , Day03
+                     , Day04
                      -- , Day05
                      -- , Day06
                      -- , Day07
@@ -39,10 +41,16 @@ executable aoc2021
                     , FlexibleInstances
                     , FlexibleContexts
                     , LambdaCase
+                    , OverloadedStrings
+                    , InstanceSigs
+  mixins:
+      base (Prelude as BasePrelude)
+    , base hiding (Prelude)
   build-depends:       base
                      , containers
                      , bytestring
                      , megaparsec
+                     , text
                      , lens
                      , array
                      , vector
