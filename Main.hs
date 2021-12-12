@@ -28,4 +28,4 @@ import Day25
 
 main :: IO ()
 main = do
-  day07
+  day08
