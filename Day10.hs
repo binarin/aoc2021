@@ -2,7 +2,11 @@ module Day10 where
 
 import Data.Void
 import Control.Monad (forM_)
-import Data.List.NonEmpty
+import qualified Data.List.NonEmpty as NE
+import Data.List.NonEmpty (NonEmpty(..))
+import Data.List (sort)
+import Data.Maybe
+import qualified System.IO
 
 data Chunk = Valid | Invalid Char | Incomplete | WTF (ParseError Text Void) deriving (Show)
 
@@ -36,9 +40,53 @@ lineParser = do
   newline
   pure r
 
+isOpen '{' = True
+isOpen '(' = True
+isOpen '<' = True
+isOpen '[' = True
+isOpen _ = False
+
+isClose '}' = True
+isClose ')' = True
+isClose '>' = True
+isClose ']' = True
+isClose _ = False
+
+isPair '{' '}' = True
+isPair '[' ']' = True
+isPair '<' '>' = True
+isPair '(' ')' = True
+isPair _ _ = False
+
+
+completionCharScore '(' = 1
+completionCharScore '[' = 2
+completionCharScore '{' = 3
+completionCharScore '<' = 4
+
+
+completionScore :: String -> Int
+completionScore s = foldr (\c score -> score * 5 + completionCharScore c) 0 (reverse s)
+
+completingParser :: String -> Maybe String
+completingParser = go []
+  where
+    go stack [] = Just stack
+    go stack (c:cs)
+      | isOpen c = go (c:stack) cs
+    go (top:rest) (c:cs)
+      | isClose c && isPair top c = go rest cs
+      | otherwise = Nothing
+
 day10 :: IO ()
 day10 = do
-  input <- parse (some lineParser) <$> readFile "data/day10-sample.txt"
+  let filename = "data/day10.txt"
+  input <- parse (some lineParser) <$> readFile filename
   forM_ input print
   print $ sum $ chunkErrorScore <$> input
+
+  input' <- System.IO.readFile filename
+  let incomplete = catMaybes $ completingParser <$> lines input'
+  print $ incomplete
+  print $ (sort $ completionScore <$> incomplete) !! (length incomplete `div` 2)
   pure ()
